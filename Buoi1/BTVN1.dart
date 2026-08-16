@@ -22,5 +22,14 @@ void BTVN1() {
 
     int sum = randomList.reduce((prevI, currentI) => prevI + currentI);
     print('Tong: ${sum}');
+
+    List<int> hasOdd = randomList.where((so) => so.isOdd).toList();
+    if (hasOdd.isNotEmpty) {
+      int total = hasOdd.reduce((prevI, currentI) => prevI + currentI);
+      double tbc = total / hasOdd.length;
+      print("Trung binh cong so le: ${tbc.toStringAsFixed(2)}");
+    } else {
+      print("Danh sach ko co so le");
+    }
   }
 }
