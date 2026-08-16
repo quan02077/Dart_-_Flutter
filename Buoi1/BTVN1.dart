@@ -19,5 +19,8 @@ void BTVN1() {
     );
 
     print(randomList);
+
+    int sum = randomList.reduce((prevI, currentI) => prevI + currentI);
+    print('Tong: ${sum}');
   }
 }
