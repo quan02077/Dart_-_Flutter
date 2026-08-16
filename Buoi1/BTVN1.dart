@@ -31,5 +31,20 @@ void BTVN1() {
     } else {
       print("Danh sach ko co so le");
     }
+
+    bool isSymmetric = true;
+
+    for (int i = 0; i < randomList.length / 2; i++) {
+      if (randomList[i] != randomList[randomList.length - 1 - i]) {
+        isSymmetric = false;
+        break;
+      }
+    }
+
+    if (isSymmetric) {
+      print("Mang nay la mang doi xung!");
+    } else {
+      print("Mang nay KHONG PHAI la mang doi xung!");
+    }
   }
 }
