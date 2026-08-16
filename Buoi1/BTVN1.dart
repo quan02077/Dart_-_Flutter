@@ -46,5 +46,46 @@ void BTVN1() {
     } else {
       print("Mang nay KHONG PHAI la mang doi xung!");
     }
+
+    bool isSortedAsc = true;
+
+    for (int i = 0; i < randomList.length - 1; i++) {
+      if (randomList[i] > randomList[i + 1]) {
+        isSortedAsc = false;
+        break;
+      }
+    }
+
+    if (isSortedAsc) {
+      print("Mang duoc sap xep tang dan!");
+    } else {
+      print("Mang KHONG duoc sap xep tang dan!");
+    }
+
+    int maxI = randomList.reduce((prevI, currentI) => max(prevI, currentI));
+    print("So lon nhat trong mang: ${maxI}");
+
+    List<int> hasEven = randomList.where((so) => so.isEven).toList();
+    if (hasEven.isNotEmpty) {
+      int maxEven = hasEven.reduce((prevI, currentI) => max(prevI, currentI));
+      print('So chan lon nhat: ${maxEven}');
+    } else {
+      print('Danh sach ko co so chan');
+    }
+
+    stdout.write('Nhap vao so bat ky: ');
+    String? inputRandom = stdin.readLineSync();
+
+    if (inputRandom != null && inputRandom.isNotEmpty) {
+      int inputRandomInt = int.parse(inputRandom);
+
+      int viTri = randomList.indexOf(inputRandomInt);
+      if (viTri == -1) {
+        print('Khong tim thay');
+      } else {
+        randomList.removeAt(viTri);
+        print(randomList);
+      }
+    }
   }
 }
