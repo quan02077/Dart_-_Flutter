@@ -151,6 +151,48 @@ enum ShipMethod {
   String get moTa => 'Phí: ${phi.vnd}, Thời gian: $thoiGian ngày';
 }
 
+// Chữ "sealed" nghĩa là "Niêm phong".
+// Nghĩa là gia đình PaymentStatus này chỉ có những đứa con được viết trong file này thôi,
+// tuyệt đối không ai được đẻ thêm class con ở file khác.
+sealed class PaymentStatus {}
+
+// Trạng thái 1: Đang chờ (Không cần dữ liệu gì thêm)
+class Pending extends PaymentStatus {}
+
+// Trạng thái 2: Thành công (Mang theo mã giao dịch để in biên lai)
+class Success extends PaymentStatus {
+  final String transactionId;
+  Success(this.transactionId);
+}
+
+// Trạng thái 3: Thất bại (Mang theo lý do lỗi để báo cho khách)
+class Failure extends PaymentStatus {
+  final String errorMessage;
+  Failure(this.errorMessage);
+}
+
+class Refunded extends PaymentStatus {}
+
+void inKetQuaThanhToan(PaymentStatus status) {
+  // Lệnh switch này không hề có chữ "default"
+  switch (status) {
+    case Pending():
+      print('Đang xoay vòng vòng... Vui lòng chờ.');
+      break;
+    case Success(
+      transactionId: var id,
+    ): // Vừa check trạng thái, vừa lôi mã giao dịch ra xài luôn!
+      print('Tiền đã vào túi! Mã giao dịch của bạn là: $id');
+      break;
+    case Failure(errorMessage: var loi): // Lôi lý do lỗi ra
+      print('Thanh toán tạch rồi, lý do: $loi');
+      break;
+    case Refunded():
+      print('Đơn hàng đã được hoàn tiền.');
+      break;
+  }
+}
+
 void main() {
   // var product1 = Product(name: 'Iphone 14', price: 2000, stock: 10);
   // var cart = Cart();
@@ -225,4 +267,7 @@ void main() {
   print(
     'Tổng tiền sau khi áp dụng khuyến mãi và phí vận chuyển tiêu chuẩn: ${(tongTien - chonKMTotNhat.tinhGiamGia(tongTien) + ShipMethod.tieuChuan.phi).vnd}',
   );
+
+  var trangThaiHienTai = Failure('Ngân hàng đang bảo trì');
+  inKetQuaThanhToan(trangThaiHienTai);
 }
