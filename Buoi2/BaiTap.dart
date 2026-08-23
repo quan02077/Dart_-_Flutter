@@ -10,13 +10,27 @@ class Product {
   bool isAvailable() => stock > 0;
 }
 
+class CartItem {
+  String productId;
+  String name;
+  double lockedPrice;
+  int quantity;
+
+  CartItem({
+    required this.productId,
+    required this.name,
+    required this.lockedPrice,
+    required this.quantity,
+  });
+}
+
 class Cart {
   // QUYẾT ĐỊNH THIẾT KẾ 2: Giá lưu ở đâu?
   // Lý do: Hiện tại bài tập đang lưu Tham chiếu (gọi thẳng list Product).
   // Tuy nhiên tôi nhận thức được rủi ro: Nếu admin đổi giá Product, giỏ hàng sẽ bị đổi giá theo.
   // Giải pháp thực tế (nếu làm app thật): Tôi sẽ tạo một class CartItem để "chép cứng" (copy)
   // giá tiền ngay tại thời điểm khách bấm nút Add to Cart.
-  final List<Product> _products = [];
+  final List<CartItem> _cartItems = [];
 
   // QYẾT ĐỊNH THIẾT KẾ 1: Quản lý hết hàng
   // Lý do: Tôi chọn cách ném ra lỗi (throw Exception) thay vì trả về false.
@@ -28,21 +42,29 @@ class Cart {
         'Sản phẩm ${product.name} đã hết hàng!',
       ); // Sửa print thành throw
     }
-    _products.add(product);
+    var newItem = CartItem(
+      productId: product.name,
+      name: product.name,
+      lockedPrice: product.price,
+      quantity: 1,
+    );
+    _cartItems.add(newItem);
   }
 
   void remove(Product product) {
-    if (_products.contains(product)) {
-      _products.remove(product);
-      print('${product.name} đã được xóa khỏi giỏ hàng.');
-    } else {
-      print('${product.name} không có trong giỏ hàng.');
-    }
+    var itemToRemove = _cartItems.firstWhere(
+      (item) => item.productId == product.name,
+      orElse: () =>
+          throw Exception('Sản phẩm ${product.name} không có trong giỏ hàng.'),
+    );
+    _cartItems.remove(itemToRemove);
+    print('${product.name} đã được xóa khỏi giỏ hàng.');
   }
 
-  double get total => _products.fold(0.0, (a, b) => a + b.price);
+  double get total =>
+      _cartItems.fold(0.0, (a, b) => a + b.lockedPrice * b.quantity);
 
-  int get count => _products.length;
+  int get count => _cartItems.length;
 }
 
 class Customer {
@@ -160,13 +182,23 @@ void main() {
   var cart = Cart();
   cart.add(product1);
   cart.add(product2);
-  cart.add(product3); // Sản phẩm hết hàng
+  try {
+    cart.add(product3);
+  } catch (e) {
+    print(
+      'LỖI KHÔNG THỂ THÊM: $e',
+    ); // In báo lỗi cho khách xem, rồi code vẫn vui vẻ chạy tiếp phần dưới!
+  } // Sản phẩm hết hàng
 
   double tongTien = cart.total;
   print('Tổng tiền: ${cart.total.vnd}');
   print('Số lượng sản phẩm trong giỏ hàng: ${cart.count}');
 
-  cart.remove(product3);
+  try {
+    cart.remove(product3);
+  } catch (e) {
+    print('LỖI KHÔNG THỂ XÓA: $e');
+  }
   print('Số lượng sản phẩm trong giỏ hàng: ${cart.count}');
 
   var thuong = Customer();
