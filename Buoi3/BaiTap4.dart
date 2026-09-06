@@ -20,7 +20,10 @@ class Cart {
       throw Exception('Số lượng phải lớn hơn 0');
     }
     if (!_prices.containsKey(sku)) {
-      throw Exception('Sản phẩm không tồn tại');
+      _events.addError(
+        ArgumentError.value(sku, 'sku', 'Sản phẩm không tồn tại'),
+      );
+      return;
     }
     _items[sku] = (_items[sku] ?? 0) + quantity;
     _events.add(CartEvent(sku, _items[sku]!, total));
