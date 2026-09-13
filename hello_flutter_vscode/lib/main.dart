@@ -10,7 +10,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: SafeArea(
-          child: Container(width: double.infinity, child: MyText()),
+          child: Container(
+            width: double.infinity,
+            child: Column(
+              children: [
+                MyText(["Nguyen Van A"]),
+                DemoStatefulWidget(),
+                Image.asset("hinh_anh/images.jpg", width: 200, height: 200),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -18,17 +28,49 @@ class MyApp extends StatelessWidget {
 }
 
 class MyText extends StatelessWidget {
+  final List<String> name;
+  MyText(this.name);
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Text("Xin chào!"),
-        const Text("Toi la Quan", style: TextStyle(color: Colors.blue)),
-        const Text("Xin chào!"),
-        const Text("Toi la Messi", style: TextStyle(color: Colors.blue)),
-        const Text("Xin chào!"),
-        const Text("Toi la A Buoi", style: TextStyle(color: Colors.blue)),
+        ...name
+            .map(
+              (name) => Text(
+                "Toi la $name",
+                style: const TextStyle(color: Colors.blue),
+              ),
+            )
+            .toList(),
+      ],
+    );
+  }
+}
+
+class DemoStatefulWidget extends StatefulWidget {
+  @override
+  State<DemoStatefulWidget> createState() {
+    return CountStatefulWidget();
+  }
+}
+
+class CountStatefulWidget extends State<DemoStatefulWidget> {
+  int dem = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text("So lan nhan: $dem"),
+        ElevatedButton(
+          onPressed: () {
+            dem++;
+            setState(() {});
+          },
+          child: const Text("Nhan vao day"),
+        ),
       ],
     );
   }
