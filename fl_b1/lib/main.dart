@@ -1,77 +1,66 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    const MaterialApp(
+      home: InfoInputWidget(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class InfoInputWidget extends StatefulWidget {
+  const InfoInputWidget({super.key});
+
+  @override
+  State<InfoInputWidget> createState() => _InfoInputWidgetState();
+}
+
+class _InfoInputWidgetState extends State<InfoInputWidget> {
+  // 1. Tạo Controller để quản lý dữ liệu ô nhập
+  final TextEditingController _nameController = TextEditingController();
+  String _displayName = "";
+  @override
+  void dispose() {
+    // 2. Bắt buộc hủy controller khi Widget bị hủy để giải phóng bộ nhớ
+    _nameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(
-          child: Container(
-            width: double.infinity,
-            child: Column(
-              children: [
-                MyText(["Nguyen Van A"]),
-                DemoStatefulWidget(),
-                Image.asset("hinh_anh/images.jpg", width: 200, height: 200),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
-              ],
+    return Scaffold(
+      appBar: AppBar(title: const Text("Thông tin cá nhân")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Họ và tên:"),
+            const SizedBox(height: 8),
+
+            // 3. Đặt TextField và gắn Controller vào
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Nhập họ và tên của bạn",
+              ),
             ),
-          ),
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _displayName = _nameController.text;
+                });
+              },
+              child: const Text("Lưu thông tin"),
+            ),
+            const SizedBox(height: 16),
+            Text("Tên vừa lưu: $_displayName"),
+          ],
         ),
       ),
-    );
-  }
-}
-
-class MyText extends StatelessWidget {
-  final List<String> name;
-  MyText(this.name);
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const Text("Xin chào!"),
-        ...name
-            .map(
-              (name) => Text(
-            "Toi la $name",
-            style: const TextStyle(color: Colors.blue),
-          ),
-        )
-            .toList(),
-      ],
-    );
-  }
-}
-
-class DemoStatefulWidget extends StatefulWidget {
-  @override
-  State<DemoStatefulWidget> createState() {
-    return CountStatefulWidget();
-  }
-}
-
-class CountStatefulWidget extends State<DemoStatefulWidget> {
-  int dem = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text("So lan nhan: $dem"),
-        ElevatedButton(
-          onPressed: () {
-            dem++;
-            setState(() {});
-          },
-          child: const Text("Nhan vao day"),
-        ),
-      ],
     );
   }
 }
