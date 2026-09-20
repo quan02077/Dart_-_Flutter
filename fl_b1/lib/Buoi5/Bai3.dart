@@ -50,7 +50,33 @@ class bottomSheet extends StatelessWidget{
         ),
       body: Center(
         child: ElevatedButton(onPressed: () => showThanhTruot(context), child: const Text('Hiện thanh trượt')),
-      )
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.all(0),
+          children: [
+            DrawerHeader(
+                child: const Text('Drawer'),
+                decoration: BoxDecoration(color: Colors.teal),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: const Text('Trang chủ'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.star),
+              title: const Text('Lưu'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: const Text('thông tin'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
